@@ -1,0 +1,25 @@
+version: '3'
+
+services: 
+    web:   
+        image: nginx
+        ports: 
+            - 80:80
+        volumes:
+            - ./nginx/app.conf:/etc/nginx/nginx.conf
+        depends_on: 
+            - rockseat   
+    rockseat:
+        image: ubuntu
+        build: .
+        command: npm run start
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on: 
+             - db
+    db:
+        image: mongo
+        restart: always
+        ports: 
+            - "27017:27017"
